@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-- `npm run dev` — Start Vite dev server
+- `npm run dev` — Start Vite dev SERVER
 - `npm run build` — Production build
 - `npm run lint` — ESLint (flat config, JS/JSX only)
 - `npm run preview` — Preview production build
