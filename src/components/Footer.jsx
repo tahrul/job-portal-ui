@@ -149,10 +149,17 @@ const Footer = () => {
                 <span className="relative z-10">Terms of Service</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-purple-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -inset-2"></div>
               </a>
-              <a className="group relative hover:text-white transition-colors duration-300">
-                <span className="relative z-10">Cookie Policy</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-purple-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -inset-2"></div>
-              </a>
+              <div className="group relative cursor-pointer">
+                <a className="relative hover:text-white transition-colors duration-300">
+                  <span className="relative z-10">Cookie Policy</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-purple-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{inset: '-0.5rem'}}></div>
+                </a>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-72 bg-gray-800 border border-gray-600 text-gray-200 text-xs rounded-xl p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 shadow-2xl">
+                  <p className="font-semibold text-white mb-2 text-sm">Cookie Policy</p>
+                  <p className="leading-relaxed">We use essential cookies to keep our site working. We also use optional analytics cookies to help us understand how visitors use the site and improve your experience. You can manage your preferences at any time.</p>
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                </div>
+              </div>
               <Link
                 to="/contact"
                 className="group relative hover:text-white transition-colors duration-300"
