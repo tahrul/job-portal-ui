@@ -16,6 +16,8 @@ const Register = () => {
   });
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   
   const { register, isLoading } = useAuth();
   const { theme } = useTheme();
@@ -64,6 +66,10 @@ const Register = () => {
 
     if (formData.userType === 'employer' && !formData.company.trim()) {
       newErrors.company = 'Company name is required';
+    }
+
+    if (!agreedToTerms) {
+      newErrors.terms = 'You must agree to the Terms of Service';
     }
 
     setErrors(newErrors);
@@ -258,6 +264,50 @@ const Register = () => {
                 </div>
               </div>
             )}
+
+            {/* Terms of Service */}
+            <div>
+              <div className="flex items-start space-x-3">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  checked={agreedToTerms}
+                  onChange={(e) => {
+                    setAgreedToTerms(e.target.checked);
+                    if (errors.terms) setErrors(prev => ({ ...prev, terms: '' }));
+                  }}
+                  className="mt-1 w-4 h-4 accent-primary-600 cursor-pointer flex-shrink-0"
+                />
+                <label htmlFor="terms" className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                  I agree to the{' '}
+                  <span
+                    className="relative inline-block"
+                    onMouseEnter={() => setShowTooltip(true)}
+                    onMouseLeave={() => setShowTooltip(false)}
+                  >
+                    <span className="font-semibold text-primary-600 cursor-pointer underline decoration-dotted">
+                      Terms of Service
+                    </span>
+                    {showTooltip && (
+                      <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 p-4 rounded-xl shadow-2xl border text-xs z-50 ${theme === 'dark' ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-200 text-gray-700'}`}>
+                        <p className="font-bold text-sm mb-2 text-primary-600">Terms of Service</p>
+                        <ul className="space-y-1 list-disc list-inside">
+                          <li>You must be at least 18 years old to use this service.</li>
+                          <li>You are responsible for keeping your account credentials secure.</li>
+                          <li>Do not post false, misleading, or fraudulent job listings.</li>
+                          <li>We may suspend accounts that violate our community guidelines.</li>
+                          <li>Your data is handled per our Privacy Policy.</li>
+                        </ul>
+                        <div className={`absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent ${theme === 'dark' ? 'border-t-gray-800' : 'border-t-white'}`}></div>
+                      </div>
+                    )}
+                  </span>
+                  {' '}and{' '}
+                  <span className="font-semibold text-primary-600">Privacy Policy</span>
+                </label>
+              </div>
+              {errors.terms && <p className="mt-1 text-sm text-red-600">{errors.terms}</p>}
+            </div>
 
             {/* Register Button */}
             <button
