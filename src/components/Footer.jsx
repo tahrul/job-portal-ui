@@ -167,13 +167,20 @@ const Footer = () => {
                   <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
                 </div>
               </div>
-              <Link
-                to="/contact"
-                className="group relative hover:text-white transition-colors duration-300"
-              >
-                <span className="relative z-10">Contact Us</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-purple-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -inset-2"></div>
-              </Link>
+              <div className="group relative cursor-pointer">
+                <Link
+                  to="/contact"
+                  className="relative hover:text-white transition-colors duration-300"
+                >
+                  <span className="relative z-10">Contact Us</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-purple-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{inset: '-0.5rem'}}></div>
+                </Link>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-72 bg-gray-800 border border-gray-600 text-gray-200 text-xs rounded-xl p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 shadow-2xl">
+                  <p className="font-semibold text-white mb-2 text-sm">Contact Us</p>
+                  <p className="leading-relaxed">Have questions or feedback? We'd love to hear from you. Reach out to our team for help with job listings, account issues, or partnership opportunities.</p>
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                </div>
+              </div>
             </div>
             <div className="text-center md:text-right">
               <div className="text-gray-400 text-sm mb-2">
