@@ -1,0 +1,20 @@
+{
+  "enabledPlugins": {
+    "commit-commands@claude-plugins-official": true
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -Command \"Add-Type -AssemblyName PresentationFramework; [System.Windows.MessageBox]::Show('Claude Code needs your attention','Claude Code')\""
+          }
+        ]
+      }
+    ]
+  }
+
+
+}
