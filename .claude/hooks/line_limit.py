@@ -10,7 +10,7 @@ Exit codes:
 import json
 import sys
 
-LINE_LIMIT = 50
+LINE_LIMIT = 500
 
 
 def get_resulting_content(tool_name, tool_input):
