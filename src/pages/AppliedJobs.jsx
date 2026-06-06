@@ -33,7 +33,10 @@ const AppliedJobs = () => {
     }
   };
 
-  const formatSalary = (min, max) => {
+  const formatSalary = (job) => {
+    const min = job.salaryMin ?? job.salary?.min;
+    const max = job.salaryMax ?? job.salary?.max;
+    if (min == null || max == null) return 'Salary not specified';
     return `$${(min / 1000).toFixed(0)}k - $${(max / 1000).toFixed(0)}k`;
   };
 
@@ -245,7 +248,7 @@ const AppliedJobs = () => {
                   </div>
                   <div className="lg:ml-8 text-center lg:text-right">
                     <div className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent mb-4">
-                      {formatSalary(job.salaryMin, job.salaryMax)}
+                      {formatSalary(job)}
                     </div>
                     <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
                       <Link
@@ -272,7 +275,7 @@ const AppliedJobs = () => {
       {/* Withdraw Confirmation Modal */}
       <ConfirmationModal
         isOpen={showWithdrawModal}
-        onClose={() => setShowWithdrawModal(false)}
+        onClose={() => { setShowWithdrawModal(false); setJobToWithdraw(null); }}
         onConfirm={confirmWithdraw}
         title="Withdraw Application?"
         message="Are you sure you want to withdraw your application? This action cannot be undone."

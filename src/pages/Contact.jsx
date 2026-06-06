@@ -71,6 +71,8 @@ const Contact = () => {
       newErrors.message = 'Message is required';
     } else if (formData.message.trim().length < 10) {
       newErrors.message = 'Message must be at least 10 characters long';
+    } else if (formData.message.trim().length > 2000) {
+      newErrors.message = 'Message must be 2000 characters or fewer';
     }
 
     setErrors(newErrors);
@@ -90,8 +92,7 @@ const Contact = () => {
 
     try {
       // Submit contact form to backend API
-      const response = await submitContactForm(formData);
-      console.log('Contact form submitted successfully:', response);
+      await submitContactForm(formData);
 
       setIsSubmitting(false);
       setSubmitSuccess(true);
@@ -280,6 +281,7 @@ const Contact = () => {
                 value={formData.message}
                 onChange={handleChange}
                 rows={6}
+                maxLength={2000}
                 className={`w-full px-4 py-3 bg-white dark:bg-gray-700 border rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 outline-none resize-none text-gray-900 dark:text-white ${
                   errors.message ? 'border-red-300 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'
                 }`}

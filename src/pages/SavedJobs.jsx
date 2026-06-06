@@ -6,7 +6,10 @@ const SavedJobs = () => {
   const { savedJobs, unsaveJob, applyForJob, isJobApplied } = useJobs();
   const { isJobSeeker, isAuthenticated, isLoading: authLoading } = useAuth();
 
-  const formatSalary = (min, max) => {
+  const formatSalary = (job) => {
+    const min = job.salaryMin ?? job.salary?.min;
+    const max = job.salaryMax ?? job.salary?.max;
+    if (min == null || max == null) return 'Salary not specified';
     return `$${(min / 1000).toFixed(0)}k - $${(max / 1000).toFixed(0)}k`;
   };
 
@@ -27,12 +30,9 @@ const SavedJobs = () => {
     await unsaveJob(jobId);
   };
 
-  const handleQuickApply = (job) => {
-    const result = applyForJob(job);
-    if (result.success) {
-      // Could add a toast notification here
-      console.log('Application submitted successfully!');
-    } else {
+  const handleQuickApply = async (job) => {
+    const result = await applyForJob(job);
+    if (!result.success) {
       console.error(result.error);
     }
   };
@@ -203,7 +203,7 @@ const SavedJobs = () => {
                   </div>
                   <div className="lg:ml-8 text-center lg:text-right">
                     <div className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent mb-4">
-                      {formatSalary(job.salaryMin, job.salaryMax)}
+                      {formatSalary(job)}
                     </div>
                     <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
                       <button

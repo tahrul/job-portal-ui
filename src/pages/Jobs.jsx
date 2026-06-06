@@ -53,7 +53,7 @@ const Jobs = () => {
       const matchesCategory = !categoryFilter || job.category === categoryFilter
       const matchesExperience = !experienceFilter || job.experienceLevel === experienceFilter
       const matchesWorkType = !workTypeFilter || job.workType === workTypeFilter
-      const matchesSalary = !salaryMinFilter || job.salary.min >= parseInt(salaryMinFilter)
+      const matchesSalary = !salaryMinFilter || (job.salary?.min ?? 0) >= parseInt(salaryMinFilter)
       const matchesRemote = !remoteOnly || job.remote
 
       return matchesSearch && matchesLocation && matchesCategory && 

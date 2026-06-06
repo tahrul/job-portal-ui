@@ -2,10 +2,17 @@ import { delay } from '../utils/delay';
 
 const getCurrentUserId = () => {
   const user = JSON.parse(localStorage.getItem('jobPortalUser') || 'null');
-  return user?.userId || user?.id;
+  const id = user?.userId || user?.id;
+  if (!id) throw new Error('No authenticated user');
+  return id;
 };
 
 const getStorageKey = () => `userProfile_${getCurrentUserId()}`;
+
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2 MB
+const ALLOWED_RESUME_TYPES = ['application/pdf'];
+const MAX_RESUME_SIZE = 5 * 1024 * 1024; // 5 MB
 
 /**
  * Get the current user's profile
@@ -21,6 +28,25 @@ export const getProfile = async () => {
  */
 export const updateProfile = async (profileData, profilePicture, resume) => {
   await delay();
+
+  if (profilePicture) {
+    if (!ALLOWED_IMAGE_TYPES.includes(profilePicture.type)) {
+      throw new Error('Profile picture must be JPEG, PNG, or WebP');
+    }
+    if (profilePicture.size > MAX_IMAGE_SIZE) {
+      throw new Error('Profile picture must be under 2 MB');
+    }
+  }
+
+  if (resume) {
+    if (!ALLOWED_RESUME_TYPES.includes(resume.type)) {
+      throw new Error('Resume must be a PDF file');
+    }
+    if (resume.size > MAX_RESUME_SIZE) {
+      throw new Error('Resume must be under 5 MB');
+    }
+  }
+
   const existing = JSON.parse(localStorage.getItem(getStorageKey()) || '{}');
 
   const updated = {
@@ -30,14 +56,12 @@ export const updateProfile = async (profileData, profilePicture, resume) => {
     updatedAt: new Date().toISOString(),
   };
 
-  // Handle profile picture file
   if (profilePicture) {
     const dataUrl = await fileToDataUrl(profilePicture);
     updated.profilePictureData = dataUrl;
     updated.profilePictureName = profilePicture.name;
   }
 
-  // Handle resume file
   if (resume) {
     const dataUrl = await fileToDataUrl(resume);
     updated.resumeData = dataUrl;
@@ -82,7 +106,6 @@ export const getResumeUrl = async () => {
   return profile.resumeData || null;
 };
 
-// Helper to convert File to data URL
 const fileToDataUrl = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

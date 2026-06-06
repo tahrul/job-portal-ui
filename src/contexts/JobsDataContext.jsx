@@ -20,31 +20,22 @@ export const JobsDataProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [lastFetchTime, setLastFetchTime] = useState(null);
   const isFetchingRef = useRef(false);
+  const lastFetchTimeRef = useRef(null);
 
   const loadJobs = useCallback(async (force = false) => {
-    // Prevent multiple simultaneous fetches
-    if (isFetchingRef.current) {
-      console.log('[JobsDataContext] Fetch already in progress, skipping...');
-      return;
-    }
+    if (isFetchingRef.current) return;
 
-    // Check cache validity
     const now = Date.now();
-    const cacheValid = lastFetchTime && (now - lastFetchTime) < CACHE_DURATION;
+    const cacheValid = lastFetchTimeRef.current && (now - lastFetchTimeRef.current) < CACHE_DURATION;
 
-    if (!force && cacheValid) {
-      console.log('[JobsDataContext] Using cached data, cache is still valid');
-      return;
-    }
+    if (!force && cacheValid) return;
 
     try {
       isFetchingRef.current = true;
       setLoading(true);
-      console.log('[JobsDataContext] Starting to fetch jobs...');
       const data = await fetchAllJobs();
-      console.log('[JobsDataContext] Fetched jobs:', data.length, 'jobs');
-      console.log('[JobsDataContext] Sample job:', data[0]);
       setJobs(data);
+      lastFetchTimeRef.current = Date.now();
       setLastFetchTime(Date.now());
       setError(null);
     } catch (err) {
@@ -54,7 +45,7 @@ export const JobsDataProvider = ({ children }) => {
       setLoading(false);
       isFetchingRef.current = false;
     }
-  }, [lastFetchTime]);
+  }, []);
 
   // Initial load
   useEffect(() => {
@@ -64,10 +55,7 @@ export const JobsDataProvider = ({ children }) => {
   // Auto-refresh every 5 minutes if user is active
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!document.hidden) {
-        console.log('[JobsDataContext] Auto-refreshing data...');
-        loadJobs();
-      }
+      if (!document.hidden) loadJobs();
     }, CACHE_DURATION);
 
     return () => clearInterval(interval);
@@ -75,11 +63,7 @@ export const JobsDataProvider = ({ children }) => {
 
   // Refresh on window focus (when user returns to tab)
   useEffect(() => {
-    const handleFocus = () => {
-      console.log('[JobsDataContext] Window focused, checking cache...');
-      loadJobs();
-    };
-
+    const handleFocus = () => loadJobs();
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
   }, [loadJobs]);
