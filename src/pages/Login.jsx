@@ -83,7 +83,7 @@ const Login = () => {
         theme === "dark"
           ? "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
           : "bg-gradient-to-br from-gray-50 via-white to-primary-50"
-      } flex items-center justify-center px-4 py-12 relative`}
+      } flex items-start justify-center px-4 py-12 relative`}
     >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">

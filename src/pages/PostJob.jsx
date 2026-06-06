@@ -11,7 +11,7 @@ const PostJob = () => {
     jobType: 'Full-time',
     workType: 'On-site',
     category: 'Technology',
-    experienceLevel: 'Mid-level',
+    experienceLevel: 'Mid Level',
     salaryMin: '',
     salaryMax: '',
     salaryCurrency: 'USD',
@@ -33,7 +33,7 @@ const PostJob = () => {
   const jobTypes = ['Full-time', 'Part-time', 'Contract', 'Internship'];
   const workTypes = ['Remote', 'Hybrid', 'On-site'];
   const categories = ['Technology', 'Marketing', 'Sales', 'Design', 'Finance', 'Operations', 'Other'];
-  const experienceLevels = ['Entry-level', 'Mid-level', 'Senior-level', 'Executive'];
+  const experienceLevels = ['Entry Level', 'Mid Level', 'Senior Level', 'Executive Level'];
   const currencies = ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'INR'];
   const salaryPeriods = ['year', 'month', 'hour'];
 

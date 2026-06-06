@@ -175,9 +175,15 @@ export const AuthProvider = ({ children }) => {
 
       // Also check localStorage for registered users
       const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-      const searchPool = [...allDummyUsers, ...registeredUsers];
+      const registeredCredentials = JSON.parse(localStorage.getItem('registeredCredentials') || '[]');
 
-      const foundUser = searchPool.find(u => u.email === email && u.password === password);
+      // Dummy users carry password inline; registered users use a separate credentials store
+      const foundUser =
+        allDummyUsers.find(u => u.email === email && u.password === password) ||
+        (() => {
+          const cred = registeredCredentials.find(c => c.email === email && c.password === password);
+          return cred ? registeredUsers.find(u => u.email === email) : null;
+        })();
 
       if (!foundUser) {
         setIsLoading(false);
@@ -201,6 +207,8 @@ export const AuthProvider = ({ children }) => {
       // For job seekers, check if profile is complete
       if (foundUser.role === 'ROLE_JOB_SEEKER') {
         try {
+          // Write userId to localStorage so profileService can find it before setUser runs
+          localStorage.setItem('jobPortalUser', JSON.stringify({ userId: foundUser.id }));
           const { getProfile } = await import('../services/profileService');
           const profileData = await getProfile();
 
@@ -257,10 +265,14 @@ export const AuthProvider = ({ children }) => {
         name: userData.name,
         email: userData.email,
         mobileNumber: userData.mobileNumber,
-        password: userData.password,
         role: 'ROLE_JOB_SEEKER',
         profileComplete: false,
       };
+
+      // Store credentials separately so the main user record has no password field
+      const registeredCredentials = JSON.parse(localStorage.getItem('registeredCredentials') || '[]');
+      registeredCredentials.push({ id: newUser.id, email: newUser.email, password: userData.password });
+      localStorage.setItem('registeredCredentials', JSON.stringify(registeredCredentials));
 
       registeredUsers.push(newUser);
       localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
@@ -286,9 +298,15 @@ export const AuthProvider = ({ children }) => {
     try {
       await delay(500);
 
+      // Whitelist fields callers are allowed to update — prevents role/id escalation
+      const ALLOWED_FIELDS = ['name', 'mobileNumber', 'company', 'profileComplete'];
+      const sanitized = Object.fromEntries(
+        Object.entries(profileData).filter(([k]) => ALLOWED_FIELDS.includes(k))
+      );
+
       const updatedUser = {
         ...user,
-        ...profileData,
+        ...sanitized,
         updatedAt: new Date().toISOString()
       };
 

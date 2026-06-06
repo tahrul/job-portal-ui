@@ -54,12 +54,10 @@ const JobApplicants = () => {
 
         // Fetch applications from backend
         const applicationsData = await jobApplicationService.getApplicationsByJob(jobId);
-        console.log('[JobApplicants] Fetched applications:', applicationsData);
 
         // Transform backend data to match frontend format
         const transformedApplications = applicationsData.map(app => {
           const profile = app.userProfile;
-          console.log('[JobApplicants] Profile data:', profile);
 
           // Helper function to convert Java byte array to base64
           const byteArrayToBase64 = (byteArray) => {
@@ -72,7 +70,6 @@ const JobApplicants = () => {
 
             // If it's not an array, log and return null
             if (!Array.isArray(byteArray)) {
-              console.warn('[JobApplicants] Expected array but got:', typeof byteArray, byteArray);
               return null;
             }
 
@@ -100,7 +97,6 @@ const JobApplicants = () => {
           // Convert byte array resume to base64 if exists
           let resumeBase64 = null;
           if (profile?.resume) {
-            console.log('[JobApplicants] Resume data type:', typeof profile.resume, 'Length:', profile.resume?.length);
             const base64String = byteArrayToBase64(profile.resume);
             if (base64String) {
               // If it already has data URL prefix, use as is
@@ -115,7 +111,6 @@ const JobApplicants = () => {
           // Convert byte array profile picture to base64 if exists
           let profilePictureBase64 = null;
           if (profile?.profilePicture) {
-            console.log('[JobApplicants] Profile picture type:', typeof profile.profilePicture, 'Length:', profile.profilePicture?.length);
             const base64String = byteArrayToBase64(profile.profilePicture);
             if (base64String) {
               // If it already has data URL prefix, use as is
@@ -146,7 +141,6 @@ const JobApplicants = () => {
           };
         });
 
-        console.log('[JobApplicants] Transformed applications:', transformedApplications);
         setApplications(transformedApplications);
       } catch (error) {
         console.error('[JobApplicants] Error loading job applications:', error);

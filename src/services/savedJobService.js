@@ -3,7 +3,9 @@ import { jobs } from '../data/mockData';
 
 const getCurrentUserId = () => {
   const user = JSON.parse(localStorage.getItem('jobPortalUser') || 'null');
-  return user?.userId || user?.id;
+  const id = user?.userId || user?.id;
+  if (!id) throw new Error('No authenticated user');
+  return id;
 };
 
 const getStorageKey = () => `savedJobIds_${getCurrentUserId()}`;
